@@ -6,6 +6,17 @@
 <body>
 <h1>User, welcome spring boot security page!</h1>
 
-
+<table>
+    <tr>
+        <th>Username</th>
+        <th>Name</th>
+        <th>Age</th>
+    </tr>
+    <tr th:each="user : ${user}" th:attr="id=${user.id}">
+        <td th:text="${user.username}"></td>
+        <td th:text="${user.lastName}"></td>
+        <td th:text="${user.age}"></td>
+    </tr>
+</table>
 </body>
 </html>

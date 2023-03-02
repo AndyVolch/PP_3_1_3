@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Form</title>
+</head>
+<body>
+<h2>User Form</h2>
+<br>
+<form action="#" th:action="@{/admin/saveUser}" th:object="${user}">
+    <input type="hidden" th:field="*{id}">
+    <label for="username">Username: </label>
+    <input type="text" th:field="*{username}" id="username" placeholder="Username">
+    <br><br>
+    <label for="lastName">Name: </label>
+    <input type="text" th:field="*{lastName}" id="lastName" placeholder="Surname">
+    <br><br>
+    <label for="age">Age: </label>
+    <input type="text" th:field="*{age}" id="age" placeholder="Age">
+    <br><br>
+    <label for="password">Password: </label>
+    <input type="text" th:field="*{password}" id="password" placeholder="Password">
+    <br><br>
+    <input type="submit" value="Save User">
+</form>
+</body>
+</html>
