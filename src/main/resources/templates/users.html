@@ -1,65 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Admin panel</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-</head>
+  <meta charset="UTF-8">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin panel</title>
+  <script type="text/javascript" th:src="@{/js/main.js}" src="..static/js/main.js"></script>
+  <!-- Bootstrap CSS (Cloudflare CDN) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.1/css/bootstrap.min.css" integrity="sha512-T584yQ/tdRR5QwOpfvDfVQUidzfgc2339Lc8uBDtcp/wYu80d7jwBgAxbyMh0a9YM9F8N3tdErpFI8iaGx6x5g==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <!-- jQuery (Cloudflare CDN) -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- Bootstrap Bundle JS (Cloudflare CDN) -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.1/js/bootstrap.min.js" integrity="sha512-UR25UO94eTnCVwjbXozyeVd6ZqpaAE9naiEUBK/A+QDbfSTQFhPGj5lOR6d8tsgbBk84Ggb5A3EkjsOgPRPcKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script></head>
+
 <body>
-<h2>Строка с данными залогиненного юзер</h2>
-<div class="container">
+<div class="container-fluid">
+  <div class="row justify-content-between align-items-center d-flex align-items-center text-light bg-dark lh-base" style="height: 40px;">
+    <tr th:each="user : ${loggedUser} ">
+    <div class="col-auto">
+      <b><td th:text="${loggedUser.lastName}"></td></b>
+      <td> with roles: </td>
+      <td th:text="${loggedUser.rolesToString()}"></td>
+    </div>
+    <div class="col-auto">
+      <td>
+        <input class="btn text-light bg-dark text-end" type="button" value="Logout"
+               onclick="window.location.href='/logout'">
+      </td>
+    </div>
+    </tr>
+  </div>
+  <br>
   <div class="row">
-    <div class="col-1">
-      <a href="/admin">Admin</a>
-      <a href="/user">User</a>
+    <div class="col-2">
+        <div class="list-group" style="margin-left: -15px; margin-right: -15px;">
+          <a class="list-group-item list-group-item-action active" href="/admin">Admin</a>
+          <a class="list-group-item list-group-item-action" href="/user">User</a>
+        </div>
     </div>
     <div class="col">
       <h1>Admin panel</h1>
-      <input type="button" value="New User"
-             onclick="window.location.href='/admin/addUser'">
-      <table>
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link active" href="/admin">User table</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/addUser">New User</a>
+        </li>
+      </ul>
+      <table class="table table-striped">
         <thead>
         <tr>
+          <th>ID</th>
           <th>Username</th>
           <th>Name</th>
           <th>Age</th>
-          <th>Actions</th>
+          <th>Role</th>
+          <th>Edit</th>
+          <th>Delete</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="user : ${allUsers}" th:attr="id=${user.id}">
+          <td th:text="${user.id}"></td>
           <td th:text="${user.username}"></td>
           <td th:text="${user.lastName}"></td>
           <td th:text="${user.age}"></td>
+          <td th:text="${user.rolesToString()}"></td>
+          <!--Кнопка изменения-->
           <td>
-            <script>
-              function updateUser(button) {
-                const row = button.closest("tr");
-                const userId = row.getAttribute("id");
-                window.location = "/admin/updateUser?UserID=" + userId;
-              }
-            </script>
-            <input type="button" value="Update"
-                   onclick="updateUser(this)">
-            <script>
-              function deleteUser(button) {
-                const row = button.closest("tr");
-                const userId = row.getAttribute("id");
-                window.location = "/admin/deleteUser?UserID=" + userId;
-              }
-            </script>
-            <input type="button" value="Delete"
-                   onclick="deleteUser(this)">
+            <a th:href="@{/admin/users/(id=${user.id})}" class="btn text-light bg-info eBtn">
+              Edit
+            </a>
           </td>
+          <!--Кнопка удаления-->
+          <td>
+            <a th:href="@{/admin/users/(id=${user.id})}" class="btn text-light bg-danger dBtn">
+              Delete
+            </a>
+          </td>
+
         </tr>
         </tbody>
       </table>
     </div>
   </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<!--Модальные окна-->
+<!--Окно изменения-->
+<div class="editForm">
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <form th:action="@{/admin/saveUser}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit user</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col"></div>
+          <div class="col-6 text-center">
+
+            <div class="form-group">
+              <label for="id"><b>ID</b></label>
+              <input type="text" class="form-control" id="id" name="id" placeholder="ID" readonly>
+            </div>
+
+            <div class="form-group">
+              <label for="username"><b>Username</b></label>
+              <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+            </div>
+
+            <div class="form-group">
+              <label for="lastName"><b>Name</b></label>
+              <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Surname">
+            </div>
+
+            <div class="form-group">
+              <label for="age"><b>Age</b></label>
+              <input type="number" class="form-control" id="age" name="age" placeholder="Age">
+            </div>
+
+            <div class="form-group">
+              <label for="password"><b>Password</b></label>
+              <input type="text" class="form-control" id="password" name="password" placeholder="Password">
+            </div>
+
+            <div class="form-group">
+              <label for="roles"><b>Roles</b></label>
+              <select multiple="true" class="form-control" id="roles" name="roles">
+                <option value="5">User</option>
+                <option value="4">Admin</option>
+                <option value="6">Outstaff</option>
+              </select>
+            </div>
+
+          </div>
+          <div class="col"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Edit</button>
+      </div>
+    </div>
+  </div>
+  </form>
+</div>
+</div>
+
+<!--Окно удаления-->
+<div class="deleteForm">
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Delete user</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col"></div>
+              <div class="col-6 text-center">
+
+                <div class="form-group">
+                  <label for="id"><b>ID</b></label>
+                  <input type="number" class="form-control" id="idDel" name="id" placeholder="ID" readonly>
+                </div>
+
+                <div class="form-group">
+                  <label for="username"><b>Username</b></label>
+                  <input type="text" class="form-control" id="usernameDel" name="username" placeholder="Username" readonly>
+                </div>
+
+                <div class="form-group">
+                  <label for="lastName"><b>Name</b></label>
+                  <input type="text" class="form-control" id="lastNameDel" name="lastName" placeholder="Surname" readonly>
+                </div>
+
+                <div class="form-group">
+                  <label for="age"><b>Age</b></label>
+                  <input type="number" class="form-control" id="ageDel" name="age" placeholder="Age" readonly>
+                </div>
+
+                <div class="form-group">
+                  <label for="password"><b>Password</b></label>
+                  <input type="text" class="form-control" id="passwordDel" name="password" placeholder="Password" readonly>
+                </div>
+
+                <div class="form-group">
+                  <label for="roles"><b>Roles</b></label>
+                  <select multiple="true" class="form-control" id="rolesDel" name="roles" readonly>
+                    <option value="5">User</option>
+                    <option value="4">Admin</option>
+                    <option value="6">Outstaff</option>
+                  </select>
+                </div>
+
+              </div>
+              <div class="col"></div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <a href="" class="btn btn-danger" id="delRef">
+              Delete
+            </a>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+
 </body>
 </html>

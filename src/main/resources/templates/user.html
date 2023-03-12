@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -7,29 +7,58 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
-<h2>Строка с данными залогиненного юзер</h2>
-<div class="container">
+
+<div class="container-fluid">
+
+    <div class="row justify-content-between align-items-center d-flex align-items-center text-light bg-dark lh-base" style="height: 40px;">
+        <tr th:each="user : ${loggedUser} ">
+            <div class="col-auto">
+                <b><td th:text="${loggedUser.lastName}"></td></b>
+                <td> with roles: </td>
+                <td th:text="${loggedUser.rolesToString()}"></td>
+            </div>
+            <div class="col-auto">
+                <td>
+                    <input class="btn text-light bg-dark text-end" type="button" value="Logout"
+                           onclick="window.location.href='/logout'">
+                </td>
+            </div>
+        </tr>
+    </div>
+
+    <br>
     <div class="row">
-        <div class="col-1">
-            <a href="/user">User</a>
+        <div class="col-2">
+            <div class="list-group" style="margin-left: -15px; margin-right: -15px;">
+                <a th:if="${#request.isUserInRole('ROLE_ADMIN')}" class="list-group-item list-group-item-action" href="/admin">Admin</a>
+                <a class="list-group-item list-group-item-action active" href="/user">User</a>
+            </div>
         </div>
         <div class="col">
             <h1>User information-page</h1>
+            <div class="row justify-content-between align-items-center d-flex align-items-center bg-light lh-base" style="height: 60px; margin-left: 25px;">
+                <h5>About user</h5>
+            </div>
+            <table class="table table-striped">
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Role</th>
+                </tr>
+                <tr th:each="user : ${loggedUser}" th:attr="id=${user.id}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.username}"></td>
+                    <td th:text="${user.lastName}"></td>
+                    <td th:text="${user.age}"></td>
+                    <td th:text="${user.rolesToString()}"></td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
-<table>
-    <tr>
-        <th>Username</th>
-        <th>Name</th>
-        <th>Age</th>
-    </tr>
-    <tr th:each="user : ${user}" th:attr="id=${user.id}">
-        <td th:text="${user.username}"></td>
-        <td th:text="${user.lastName}"></td>
-        <td th:text="${user.age}"></td>
-    </tr>
-</table>
+
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
